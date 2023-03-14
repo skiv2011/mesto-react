@@ -5,12 +5,25 @@ import Main from './Main';
 import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
+import {CurrentUserContext} from '../contexts/CurrentUserContext';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({ isOpen: false, link: '#', name: '#' });
+  const [currentUser, setCurrentUser] = React.useState({});
+
+React.useEffect(() => {
+  Api.getUserInfo()
+  .then((user) => {
+    setCurrentUser(user);
+  })
+  .catch((err)=>{
+    console.log(err);
+  });
+},[])
+
 
   React.useEffect(() => {
     const handleEscClose = (evt) => {
@@ -50,6 +63,7 @@ function App() {
   }
 
   return (
+    <CurrentUserContext.Provider value={currentUser}>
     <div className="page">
       <Header />
       <Main
@@ -115,6 +129,7 @@ function App() {
         buttonText='Да'>
       </PopupWithForm>
     </div>
+    </CurrentUserContext.Provider>
   );
 }
 
