@@ -7,7 +7,7 @@ import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import ImagePopup from './ImagePopup';
-import Api from '../Utils/Api';
+import { api } from '../Utils/Api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function App() {
@@ -20,8 +20,8 @@ function App() {
 
   React.useEffect(() => {
     Promise.all([
-      Api.getUserInfo(),
-      Api.getInitialCards()])
+      api.getUserInfo(),
+      api.getInitialCards()])
       .then(([user, initialCards]) => {
         setCurrentUser(user);
         setCards(initialCards);
@@ -54,7 +54,7 @@ function App() {
 
   function handleCardLike(card) {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
-    Api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
+    api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
       setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
     }).catch((err) => {
       console.log(err);
@@ -62,7 +62,7 @@ function App() {
   }
 
   function handleCardDelete(card) {
-    Api
+    api
       .deleteCard(card._id)
       .then(() => {
         setCards((state) =>
@@ -98,7 +98,7 @@ function App() {
   }
 
   function handleUpdateUser({ name, about }) {
-    Api.editProfile(name, about)
+    api.editProfile(name, about)
       .then((result) => {
         setCurrentUser(result);
         closeAllPopups();
@@ -109,7 +109,7 @@ function App() {
   }
 
   function handleUpdateAvatar({ avatar }) {
-    Api.editAvatar(avatar)
+    api.editAvatar(avatar)
       .then((data) => {
         setCurrentUser(data);
         closeAllPopups();
@@ -120,7 +120,7 @@ function App() {
   }
 
   function handleAddPlaceSubmit(title, link) {
-    Api.addCards(title, link)
+    api.addCards(title, link)
       .then((newCard) => {
         setCards([newCard, ...cards]);
         closeAllPopups();
