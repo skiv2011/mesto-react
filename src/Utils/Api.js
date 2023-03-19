@@ -24,13 +24,13 @@ class Api {
       });
   }
 
-  editProfile(data) {
+  editProfile(name,about) {
     return fetch(`${this._baseUrl}/users/me`, {
       method: 'PATCH',
       headers: this._headers,
       body: JSON.stringify({
-        name: data.name,
-        about: data.job
+        name: name,
+        about: about
       })
     })
       .then(res => {
@@ -81,21 +81,12 @@ class Api {
     });
   }
 
-  addLike(cardId) {
+  changeLikeCardStatus(cardId, usePut) {
+    const method = usePut? 'PUT':'DELETE';
     return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
-      method: 'PUT',
+      method: method,
       headers: this._headers,
-    })
-    .then(res => {
-      return this._check(res);
-    });
-  }
-
-  deleteLike(cardId) {
-    return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
-      method: 'DELETE',
-      headers: this._headers,
-    })
+      })
     .then(res => {
       return this._check(res);
     });
